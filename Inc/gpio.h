@@ -32,13 +32,26 @@
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */
+typedef void (*gpioCallback_t)(void *aArg, unsigned short *aArgSize);
+
+typedef enum {
+	 E_GPIO_B1_PIN_CALLBACK = 0,
+	 E_GPIO_NUMBER_OF_CALLBACK,
+} gpioCallback_name_t;
+
+typedef struct {
+	gpioCallback_t gpioCallback;
+	void *arg;
+	void *argSize;
+} gpioCallbackContext_t;
+
 
 /* USER CODE END Private defines */
 
 void MX_GPIO_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void gpioSetCallback(gpioCallback_name_t aGpioName, gpioCallback_t aGpioCallback, void *aArg, void *aArgSize);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

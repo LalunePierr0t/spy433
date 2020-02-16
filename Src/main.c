@@ -56,7 +56,18 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void setActionOnButton(void*  aArg, void* aArg2) {
 
+	static unsigned char isEnabled = 0;
+	if (1 == isEnabled) {
+		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+		isEnabled = 0;
+	}
+	else {
+		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+		isEnabled = 1;
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -90,7 +101,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  gpioSetCallback( E_GPIO_B1_PIN_CALLBACK, (gpioCallback_t)setActionOnButton, NULL, NULL);
   /* USER CODE END 2 */
  
  
