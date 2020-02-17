@@ -58,29 +58,54 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define C_UART_TIMEOUT              20000
-#define C_MSG_01                    KRED    "LED Status changed!\n\r"      KNRM
-#define C_MSG_02                    KGRN    "LED Status changed!\n\r"      KNRM
-#define C_MSG_03                    KBLU    "LED Status changed!\n\r"      KNRM
-#define C_MSG_04                    KYEL    "LED Status changed!\n\r"      KNRM
-#define C_MSG_05                    KMAG    "LED Status changed!\n\r"      KNRM
-#define C_MSG_06                    KCYN    "LED Status changed!\n\r"      KNRM
-#define C_MSG_07                    KWHT    "LED Status changed!\n\r"      KNRM
-#define C_NB_OF_MSG                 7
+#define C_UART_TIMEOUT              2000
 
-static const char *msg[]={C_MSG_01,C_MSG_02,C_MSG_03,C_MSG_04,C_MSG_05,C_MSG_06,C_MSG_07};
-static unsigned char gMsgSent = true;
+// Led color message declaration
+typedef enum {
+    E_RED_LED_STATE = 0,
+    E_GREEN_LED_STATE,
+    E_BLUE_LED_STATE,
+    E_YELLOW_LED_STATE,
+    E_MAGENTA_LED_STATE,
+    E_CYAN_LED_STATE,
+    E_WHITE_LED_STATE,
+    E_LED_COLOR_STATE_NB_OF
+} ledcolor_t;
+#define C_MSG_01                    KRED    "LED Status changed! "      KNRM
+#define C_MSG_02                    KGRN    "LED Status changed! "      KNRM
+#define C_MSG_03                    KBLU    "LED Status changed! "      KNRM
+#define C_MSG_04                    KYEL    "LED Status changed! "      KNRM
+#define C_MSG_05                    KMAG    "LED Status changed! "      KNRM
+#define C_MSG_06                    KCYN    "LED Status changed! "      KNRM
+#define C_MSG_07                    KWHT    "LED Status changed! "      KNRM
+#define C_GET_LED_COLOR(color)      (color == E_RED_LED_STATE)      ?   C_MSG_01 : \
+                                    (color == E_GREEN_LED_STATE)    ?   C_MSG_02 : \
+                                    (color == E_BLUE_LED_STATE)     ?   C_MSG_03 : \
+                                    (color == E_YELLOW_LED_STATE)   ?   C_MSG_04 : \
+                                    (color == E_MAGENTA_LED_STATE)  ?   C_MSG_05 : \
+                                    (color == E_CYAN_LED_STATE)     ?   C_MSG_06 : \
+                                                                        C_MSG_07
+// Led status message declaration
+typedef enum {
+    E_OFF_LED_STATE = 0,
+    E_ON_LED_STATE,
+    E_LED_STATE_NB_OF
+} ledstate_t;
+#define C_OFF_STATE                 KRED    "OFF \n\r"                  KNRM
+#define C_ON_LED_STATE              KGRN    "ON  \n\r"                  KNRM
+#define C_GET_LED_STR(state)        (state == E_OFF_LED_STATE) ? C_OFF_STATE : C_ON_LED_STATE
 
-void setActionOnButton(void*  aArg, void* aArg2) {
+static uint8_t gMsgSent = true;
+static uint8_t gIsLedEnabled = false;
 
-    static unsigned char isEnabled = false;
-    if (true == isEnabled) {
+void setActionOnButtonInterrupt(void) {
+   if (true == gIsLedEnabled) {
         HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-        isEnabled = false;
+        gIsLedEnabled = false;
     }
     else {
         HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-        isEnabled = true;
+        gIsLedEnabled = true;
     }
     gMsgSent = false;
 }
@@ -104,7 +129,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  /* USER CODE ENDC_NB_OF_MSG Init */
+  /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
@@ -118,25 +143,24 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  gpioSetCallback( E_GPIO_B1_PIN_CALLBACK, (gpioCallback_t)setActionOnButton, NULL, NULL);
+  gpioSetCallback( E_GPIO_B1_PIN_CALLBACK, (gpioCallback_t)setActionOnButtonInterrupt, NULL, NULL);
   /* USER CODE END 2 */
  
  
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (true)
+  while (1)
   {
-    /* USER CODE EC_NB_OF_MSGND WHILE */
-      static unsigned char i=0;
+    /* USER CODE END WHILE */
+      static uint8_t i=0;
       if (false == gMsgSent) {
         gMsgSent = true;
-        HAL_UART_Transmit(&huart2, (uint8_t*)msg[i], strlen(msg[i]), C_UART_TIMEOUT);
-          if (i < (C_NB_OF_MSG-1)) i++;
-          else i = 0;
+        HAL_UART_Transmit(&huart2, (uint8_t*)(C_GET_LED_COLOR(i)), strlen(C_GET_LED_COLOR(i)), C_UART_TIMEOUT);
+        HAL_UART_Transmit(&huart2, (uint8_t*)(C_GET_LED_STR(gIsLedEnabled)), strlen((C_GET_LED_STR(gIsLedEnabled))), C_UART_TIMEOUT);
+        i++;
+        if (i >= E_LED_COLOR_STATE_NB_OF) i = 0;
       }
-
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -144,7 +168,6 @@ int main(void)
 
 /**
   * @brief System Clock Configuration
-  *
   * @retval None
   */
 void SystemClock_Config(void)

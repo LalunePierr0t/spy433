@@ -84,10 +84,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     {
     case  B1_Pin:
         gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].gpioCallback(gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].arg,
-                                                                      gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].argSize);
+                                                                     gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].argSize);
         break;
     default:
-        //print unknow pin
+        //print unknown pin
         break;
     }
 }

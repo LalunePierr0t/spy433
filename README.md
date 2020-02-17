@@ -24,7 +24,7 @@ You can log the serial output use *minicom* (config 115200, I18n)
 
 
 ```
-$ minicom -D /dev/ttyACM0
+$ minicom -c on -D /dev/ttyACM0
 ``` 
 
 Press the blue button, you should get the following output:
