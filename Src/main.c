@@ -57,6 +57,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#define C_UART_TIMEOUT 			20000
 static unsigned char gMsgSent = false;
 static const uint8_t msg[] = "LED Status changed!\n\r";
 
@@ -119,7 +120,7 @@ int main(void)
     /* USER CODE END WHILE */
 	  if (false == gMsgSent) {
 		gMsgSent = true;
-		HAL_UART_Transmit(&huart2, (uint8_t*)msg, sizeof(msg), 0xFFFF);
+		HAL_UART_Transmit(&huart2, (uint8_t*)msg, sizeof(msg), C_UART_TIMEOUT);
 	  }
     /* USER CODE BEGIN 3 */
   }
