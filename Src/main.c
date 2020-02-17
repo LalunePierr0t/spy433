@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,21 +57,21 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-static unsigned char gMsgSent=0;
+static unsigned char gMsgSent = false;
 static const uint8_t msg[] = "LED Status changed!\n\r";
 
 void setActionOnButton(void*  aArg, void* aArg2) {
 
-	static unsigned char isEnabled = 0;
-	if (1 == isEnabled) {
+	static unsigned char isEnabled = false;
+	if (true == isEnabled) {
 		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-		isEnabled = 0;
+		isEnabled = false;
 	}
 	else {
 		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-		isEnabled = 1;
+		isEnabled = true;
 	}
-	gMsgSent=0;
+	gMsgSent = false;
 }
 /* USER CODE END 0 */
 
@@ -114,11 +114,11 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
+  while (true)
   {
     /* USER CODE END WHILE */
-	  if (0 == gMsgSent) {
-		gMsgSent =1;
+	  if (false == gMsgSent) {
+		gMsgSent = true;
 		HAL_UART_Transmit(&huart2, (uint8_t*)msg, sizeof(msg), 0xFFFF);
 	  }
     /* USER CODE BEGIN 3 */
