@@ -20,7 +20,7 @@ This project is done with STM32CubeIDE Version: 1.2.0 and STM32CubeMX Version : 
 
 Simply plug on the ST evalboard NUCLEO-F401RE on USB.
 
-You can log the serial output use minicom (config 115200, I18n)
+You can log the serial output use *minicom* (config 115200, I18n)
 
 
 ```
