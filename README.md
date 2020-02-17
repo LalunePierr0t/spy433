@@ -1,7 +1,7 @@
-# usbrelay
-ST evalboard NUCLEO-F401RE Exploration
+# ST evalboard NUCLEO-F401RE Exploration
 
-This example provides .
+
+This example provides :
 
  *Features :*
  - [x] Board initialization
