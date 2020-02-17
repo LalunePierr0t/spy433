@@ -27,6 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
+#include "color.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,22 +58,31 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define C_UART_TIMEOUT 			20000
-static unsigned char gMsgSent = false;
-static const uint8_t msg[] = "LED Status changed!\n\r";
+#define C_UART_TIMEOUT              20000
+#define C_MSG_01                    KRED    "LED Status changed!\n\r"      KNRM
+#define C_MSG_02                    KGRN    "LED Status changed!\n\r"      KNRM
+#define C_MSG_03                    KBLU    "LED Status changed!\n\r"      KNRM
+#define C_MSG_04                    KYEL    "LED Status changed!\n\r"      KNRM
+#define C_MSG_05                    KMAG    "LED Status changed!\n\r"      KNRM
+#define C_MSG_06                    KCYN    "LED Status changed!\n\r"      KNRM
+#define C_MSG_07                    KWHT    "LED Status changed!\n\r"      KNRM
+#define C_NB_OF_MSG                 7
+
+static const char *msg[]={C_MSG_01,C_MSG_02,C_MSG_03,C_MSG_04,C_MSG_05,C_MSG_06,C_MSG_07};
+static unsigned char gMsgSent = true;
 
 void setActionOnButton(void*  aArg, void* aArg2) {
 
-	static unsigned char isEnabled = false;
-	if (true == isEnabled) {
-		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-		isEnabled = false;
-	}
-	else {
-		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-		isEnabled = true;
-	}
-	gMsgSent = false;
+    static unsigned char isEnabled = false;
+    if (true == isEnabled) {
+        HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+        isEnabled = false;
+    }
+    else {
+        HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+        isEnabled = true;
+    }
+    gMsgSent = false;
 }
 /* USER CODE END 0 */
 
@@ -94,7 +104,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+  /* USER CODE ENDC_NB_OF_MSG Init */
 
   /* Configure the system clock */
   SystemClock_Config();
@@ -117,11 +127,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (true)
   {
-    /* USER CODE END WHILE */
-	  if (false == gMsgSent) {
-		gMsgSent = true;
-		HAL_UART_Transmit(&huart2, (uint8_t*)msg, sizeof(msg), C_UART_TIMEOUT);
-	  }
+    /* USER CODE EC_NB_OF_MSGND WHILE */
+      static unsigned char i=0;
+      if (false == gMsgSent) {
+        gMsgSent = true;
+        HAL_UART_Transmit(&huart2, (uint8_t*)msg[i], strlen(msg[i]), C_UART_TIMEOUT);
+          if (i < (C_NB_OF_MSG-1)) i++;
+          else i = 0;
+      }
+
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -129,6 +144,7 @@ int main(void)
 
 /**
   * @brief System Clock Configuration
+  *
   * @retval None
   */
 void SystemClock_Config(void)

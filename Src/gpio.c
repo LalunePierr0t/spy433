@@ -73,23 +73,23 @@ void MX_GPIO_Init(void)
 /* USER CODE BEGIN 2 */
 void gpioSetCallback(gpioCallback_name_t aGpioName,gpioCallback_t aGpioCallback,void *aArg, void *aArgSize)
 {
-	gGpioCallbackCollection[aGpioName].gpioCallback = aGpioCallback;
-	gGpioCallbackCollection[aGpioName].arg = aArg;
-	gGpioCallbackCollection[aGpioName].argSize = aArgSize;
+    gGpioCallbackCollection[aGpioName].gpioCallback = aGpioCallback;
+    gGpioCallbackCollection[aGpioName].arg = aArg;
+    gGpioCallbackCollection[aGpioName].argSize = aArgSize;
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	switch(GPIO_Pin)
-	{
-	case  B1_Pin:
-		gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].gpioCallback(gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].arg,
-     			                                                     gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].argSize);
-		break;
-	default:
-		//print unknow pin
-		break;
-	}
+    switch(GPIO_Pin)
+    {
+    case  B1_Pin:
+        gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].gpioCallback(gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].arg,
+                                                                      gGpioCallbackCollection[E_GPIO_B1_PIN_CALLBACK].argSize);
+        break;
+    default:
+        //print unknow pin
+        break;
+    }
 }
 /* USER CODE END 2 */
 
