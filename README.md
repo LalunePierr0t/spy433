@@ -5,7 +5,7 @@ This example provides :
 
  *Features :*
  - [x] Board initialization
- - [x] LED Switch On/off
+ - [x] LED Switch On/Off
  - [x] User Button IT
  - [x] Virtual COM Port / CDC
 
